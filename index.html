@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta name="theme-color" content="#000000">
+
+    <title>JTN PLAYER</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="logo">
+            <span>JTN</span> PLAYER
+        </div>
+
+        <div class="header-buttons">
+
+            <button
+                class="header-btn"
+                id="searchBtn"
+                type="button"
+                aria-label="Rechercher"
+            >⌕</button>
+
+            <button
+                class="header-btn"
+                id="sortBtn"
+                type="button"
+                aria-label="Trier"
+            >☷</button>
+
+            <button
+                class="header-btn"
+                id="settingsBtn"
+                type="button"
+                aria-label="Paramètres"
+            >⚙</button>
+
+        </div>
+
+    </header>
+
+
+    <!-- RECHERCHE -->
+    <div
+        class="search-container"
+        id="searchContainer"
+    >
+
+        <input
+            id="searchInput"
+            type="search"
+            placeholder="Rechercher une musique ou une vidéo..."
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <!-- ONGLETS -->
+    <nav class="tabs">
+
+        <button
+            class="tab active"
+            data-page="songs"
+            type="button"
+        >♫ Chansons</button>
+
+        <button
+            class="tab"
+            data-page="videos"
+            type="button"
+        >▷ Vidéos</button>
+
+        <button
+            class="tab"
+            data-page="playlists"
+            type="button"
+        >☷ Playlists</button>
+
+        <button
+            class="tab"
+            data-page="folders"
+            type="button"
+        >□ Dossiers</button>
+
+        <button
+            class="tab"
+            data-page="artists"
+            type="button"
+        >♙ Artistes</button>
+
+    </nav>
+
+
+    <!-- CONTENU -->
+    <main id="content">
+
+        <section
+            class="empty-page"
+            id="emptyPage"
+        >
+
+            <div class="headphone">
+
+                <div class="glow"></div>
+
+                <svg
+                    viewBox="0 0 300 300"
+                    aria-hidden="true"
+                >
+
+                    <path
+                        d="M70 160V130C70 55 230 55 230 130V160"
+                        fill="none"
+                        stroke="#00ff3c"
+                        stroke-width="20"
+                        stroke-linecap="round"
+                    />
+
+                    <rect
+                        x="42"
+                        y="140"
+                        width="55"
+                        height="95"
+                        rx="27"
+                        fill="#071107"
+                        stroke="#00ff3c"
+                        stroke-width="8"
+                    />
+
+                    <rect
+                        x="203"
+                        y="140"
+                        width="55"
+                        height="95"
+                        rx="27"
+                        fill="#071107"
+                        stroke="#00ff3c"
+                        stroke-width="8"
+                    />
+
+                    <rect
+                        x="56"
+                        y="158"
+                        width="27"
+                        height="57"
+                        rx="13"
+                        fill="#0b3513"
+                    />
+
+                    <rect
+                        x="217"
+                        y="158"
+                        width="27"
+                        height="57"
+                        rx="13"
+                        fill="#0b3513"
+                    />
+
+                    <rect
+                        x="119"
+                        y="140"
+                        width="8"
+                        height="50"
+                        rx="4"
+                        fill="#00ff3c"
+                    />
+
+                    <rect
+                        x="132"
+                        y="120"
+                        width="8"
+                        height="65"
+                        rx="4"
+                        fill="#00ff3c"
+                    />
+
+                    <rect
+                        x="145"
+                        y="100"
+                        width="8"
+                        height="105"
+                        rx="4"
+                        fill="#00ff3c"
+                    />
+
+                    <rect
+                        x="158"
+                        y="130"
+                        width="8"
+                        height="70"
+                        rx="4"
+                        fill="#00ff3c"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <h1 id="emptyTitle">
+                Aucune musique trouvée
+            </h1>
+
+            <p id="emptyText">
+                Vos musiques apparaîtront ici<br>
+                automatiquement.
+            </p>
+
+            <button
+                class="scan-button"
+                id="scanButton"
+                type="button"
+            >
+                ⟳ &nbsp; Scanner la musique
+            </button>
+
+        </section>
+
+
+        <section
+            class="media-list"
+            id="mediaList"
+        ></section>
+
+    </main>
+
+</div>
+
+
+<!-- SÉLECTION DE FICHIERS -->
+<input
+    id="fileInput"
+    type="file"
+    accept="audio/*,video/*"
+    multiple
+    hidden
+>
+
+
+<!-- =====================================================
+     LECTEUR VIDÉO
+     ===================================================== -->
+
+<div
+    class="video-screen"
+    id="videoScreen"
+>
+
+    <!-- BARRE DU HAUT -->
+    <div class="video-top">
+
+        <button
+            id="videoClose"
+            type="button"
+            aria-label="Fermer"
+        >←</button>
+
+
+        <div class="video-logo">
+            <span>JTN</span> PLAYER
+        </div>
+
+
+        <div class="video-top-actions">
+
+            <button
+                type="button"
+                aria-label="Verrouiller"
+            >🔒</button>
+
+            <button
+                type="button"
+                aria-label="Rotation"
+            >⟳</button>
+
+            <button
+                type="button"
+                aria-label="Plus"
+            >⋮</button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ZONE VIDÉO -->
+    <div class="video-stage">
+
+        <video
+            id="videoPlayer"
+            playsinline
+            preload="metadata"
+        ></video>
+
+
+        <!-- PRÉCÉDENT -->
+        <button
+            class="video-side video-prev"
+            id="videoBack"
+            type="button"
+            aria-label="Vidéo précédente"
+        >
+            ⏮
+        </button>
+
+
+        <!-- PLAY / PAUSE -->
+        <button
+            class="video-center-play"
+            id="videoPlay"
+            type="button"
+            aria-label="Lecture"
+        >
+            ▶
+        </button>
+
+
+        <!-- SUIVANT -->
+        <button
+            class="video-side video-next"
+            id="videoForward"
+            type="button"
+            aria-label="Vidéo suivante"
+        >
+            ⏭
+        </button>
+
+    </div>
+
+
+    <!-- BARRE DE PROGRESSION -->
+    <div class="video-progress">
+
+        <span id="videoCurrentTime">
+            00:00
+        </span>
+
+
+        <input
+            id="videoProgress"
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+            step="0.1"
+        >
+
+
+        <span id="videoDuration">
+            00:00
+        </span>
+
+    </div>
+
+
+    <!-- INFORMATIONS VIDÉO -->
+    <div class="video-info">
+
+        <div>
+
+            <div
+                class="video-title"
+                id="videoTitle"
+            >
+                Aucune vidéo
+            </div>
+
+
+            <div
+                class="video-artist"
+                id="videoArtist"
+            >
+                JTN PLAYER
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+    <div class="video-actions">
+
+        <button
+            id="videoAudio"
+            type="button"
+        >
+            🎧
+            <small>Audio</small>
+        </button>
+
+
+        <button
+            id="videoRotate"
+            type="button"
+        >
+            📱
+            <small>Rotation</small>
+        </button>
+
+
+        <button
+            id="videoLock"
+            type="button"
+        >
+            🔒
+            <small>Verrouiller</small>
+        </button>
+
+
+        <button
+            id="videoPlaylist"
+            type="button"
+        >
+            ☷
+            <small>Playlist</small>
+        </button>
+
+
+        <button
+            id="videoFullscreen"
+            type="button"
+        >
+            ⛶
+            <small>Plus</small>
+        </button>
+
+    </div>
+
+
+    <!-- À SUIVRE -->
+    <div class="video-up-next">
+
+        <div class="video-up-header">
+
+            <span>
+                À suivre
+            </span>
+
+            <span id="videoCount">
+                1/1
+            </span>
+
+        </div>
+
+
+        <div id="videoQueue"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MINI PLAYER
+     ===================================================== -->
+
+<div
+    class="mini-player"
+    id="miniPlayer"
+>
+
+    <div class="mini-info">
+
+        <div
+            class="album-icon"
+            id="miniCover"
+        >
+            ♫
+        </div>
+
+
+        <div class="track-info">
+
+            <div
+                class="track-title"
+                id="trackTitle"
+            >
+                Aucune musique
+            </div>
+
+            <div
+                class="track-artist"
+                id="trackArtist"
+            >
+                JTN PLAYER
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="player-controls">
+
+        <button
+            id="previousButton"
+            type="button"
+        >
+            |◀
+        </button>
+
+
+        <button
+            class="main-play"
+            id="playButton"
+            type="button"
+        >
+            ▶
+        </button>
+
+
+        <button
+            id="nextButton"
+            type="button"
+        >
+            ▶|
+        </button>
+
+
+        <button
+            id="muteButton"
+            type="button"
+        >
+            🔊
+        </button>
+
+    </div>
+
+
+    <div
+        class="progress-container"
+        id="miniProgressContainer"
+    >
+
+        <div
+            class="progress-bar"
+            id="progressBar"
+        ></div>
+
+    </div>
+
+
+    <div class="time-row">
+
+        <span id="currentTime">
+            0:00
+        </span>
+
+        <span id="duration">
+            0:00
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     LECTEUR COMPLET : GRANDE PAGE
+     ===================================================== -->
+
+<div
+    class="full-player"
+    id="fullPlayer"
+>
+
+    <div class="full-player-top">
+
+        <button
+            id="closeFullPlayer"
+            type="button"
+            aria-label="Fermer le lecteur"
+        >
+            ⌄
+        </button>
+
+
+        <span>
+            LECTEUR
+        </span>
+
+
+        <button
+            id="fullMore"
+            type="button"
+            aria-label="Plus"
+        >
+            ⋮
+        </button>
+
+    </div>
+
+
+    <div
+        class="full-cover"
+        id="fullCover"
+    >
+        🎵
+    </div>
+
+
+    <div class="full-title-row">
+
+        <div>
+
+            <h1 id="fullTitle">
+                Aucune musique
+            </h1>
+
+            <p id="fullArtist">
+                JTN PLAYER
+            </p>
+
+        </div>
+
+
+        <button
+            id="fullFavorite"
+            type="button"
+            aria-label="Favori"
+        >
+            ♡
+        </button>
+
+    </div>
+
+
+    <div class="full-progress-area">
+
+        <input
+            type="range"
+            id="fullProgress"
+            min="0"
+            max="100"
+            value="0"
+            step="0.1"
+        >
+
+
+        <div class="full-time">
+
+            <span id="fullCurrentTime">
+                0:00
+            </span>
+
+            <span id="fullDuration">
+                0:00
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="full-main-controls">
+
+        <button
+            id="shuffleButton"
+            type="button"
+        >
+            🔀
+        </button>
+
+
+        <button
+            id="fullPrevious"
+            type="button"
+        >
+            ⏮
+        </button>
+
+
+        <button
+            class="full-play"
+            id="fullPlay"
+            type="button"
+        >
+            ▶
+        </button>
+
+
+        <button
+            id="fullNext"
+            type="button"
+        >
+            ⏭
+        </button>
+
+
+        <button
+            id="repeatButton"
+            type="button"
+        >
+            🔁
+        </button>
+
+    </div>
+
+
+    <div class="extra-controls">
+
+        <button
+            id="equalizerButton"
+            type="button"
+        >
+            🎚️
+            <small>Égaliseur</small>
+        </button>
+
+
+        <button
+            id="lyricsButton"
+            type="button"
+        >
+            💬
+            <small>Paroles</small>
+        </button>
+
+
+        <button
+            id="timerButton"
+            type="button"
+        >
+            ⏱️
+            <small>Minuteur</small>
+        </button>
+
+    </div>
+
+
+    <div class="queue">
+
+        <h2>
+            File d'attente
+        </h2>
+
+        <div id="queueList"></div>
+
+    </div>
+
+</div>
+
+
+<!-- MENU TRI -->
+<div
+    class="sort-menu"
+    id="sortMenu"
+>
+
+    <button
+        data-sort="az"
+        type="button"
+    >
+        A → Z
+    </button>
+
+    <button
+        data-sort="za"
+        type="button"
+    >
+        Z → A
+    </button>
+
+    <button
+        data-sort="new"
+        type="button"
+    >
+        Plus récent
+    </button>
+
+</div>
+
+
+<!-- MESSAGE -->
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<!-- AUDIO -->
+<audio
+    id="audioPlayer"
+    preload="metadata"
+></audio>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
