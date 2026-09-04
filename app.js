@@ -421,6 +421,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await loadSavedMedia();
 
+    setupMediaSession();
+
     setupEvents();
 
     updateEmptyPage();
@@ -928,10 +930,38 @@ function setupEvents() {
         updatePlayButtons
     );
 
+    audioPlayer.addEventListener(
+        "play",
+        () => {
+
+            if ("mediaSession" in navigator) {
+
+                navigator.mediaSession.playbackState =
+                    "playing";
+
+            }
+
+        }
+    );
+
 
     audioPlayer.addEventListener(
         "pause",
         updatePlayButtons
+    );
+
+    audioPlayer.addEventListener(
+        "pause",
+        () => {
+
+            if ("mediaSession" in navigator) {
+
+                navigator.mediaSession.playbackState =
+                    "paused";
+
+            }
+
+        }
     );
 
 
@@ -1742,6 +1772,88 @@ function renderMediaList() {
    CHARGER LE MÉDIA ACTUEL
    ========================================================= */
 
+/*
+   NOTIFICATION DE LECTURE (Media Session)
+
+   Permet à la musique de continuer de jouer
+   quand on quitte l'appli (sans la fermer
+   complètement), et affiche une vraie
+   notification système avec pochette,
+   titre et boutons de contrôle.
+*/
+
+function setupMediaSession() {
+
+    if (!("mediaSession" in navigator)) {
+        return;
+    }
+
+    navigator.mediaSession.setActionHandler(
+        "play",
+        () => {
+
+            audioPlayer.play()
+                .catch(() => {});
+
+        }
+    );
+
+    navigator.mediaSession.setActionHandler(
+        "pause",
+        () => {
+
+            audioPlayer.pause();
+
+        }
+    );
+
+    navigator.mediaSession.setActionHandler(
+        "previoustrack",
+        playPrevious
+    );
+
+    navigator.mediaSession.setActionHandler(
+        "nexttrack",
+        playNext
+    );
+
+}
+
+function updateMediaSession(item) {
+
+    if (!("mediaSession" in navigator)) {
+        return;
+    }
+
+    navigator.mediaSession.metadata =
+        new MediaMetadata({
+
+            title:
+                item.title || "Musique",
+
+            artist:
+                item.artist || "JTN PLAYER",
+
+            album:
+                "JTN PLAYER",
+
+            artwork: item.cover
+                ? [{
+                    src: item.cover,
+                    sizes: "512x512",
+                    type: "image/png"
+                }]
+                : [{
+                    src: "icon-512.png",
+                    sizes: "512x512",
+                    type: "image/png"
+                }]
+
+        });
+
+}
+
+
 function loadCurrentInfo(autoPlay = true) {
 
     if (
@@ -1810,6 +1922,9 @@ function loadCurrentInfo(autoPlay = true) {
         item.cover,
         "🎵"
     );
+
+
+    updateMediaSession(item);
 
 
     updateFavoriteButton();
