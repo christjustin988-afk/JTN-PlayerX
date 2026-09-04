@@ -1378,12 +1378,19 @@ async function handleFiles(event) {
 
         /*
           Pour les fichiers audio :
-          le navigateur ne donne pas directement
-          accès aux pochettes intégrées.
-
-          On garde donc une structure prête
-          à recevoir les métadonnées si disponibles.
+          on lit les tags ID3 du fichier pour
+          essayer d'en extraire la pochette
+          intégrée (courant sur les MP3).
         */
+
+        if (type === "audio") {
+
+            cover =
+                await extractAudioCover(
+                    file
+                );
+
+        }
 
         const item = {
 
@@ -1581,8 +1588,307 @@ function extractVideoThumbnail(url) {
 
 
 /* =========================================================
-   AFFICHAGE LISTE
+   EXTRAIRE POCHETTE AUDIO (TAGS ID3)
    ========================================================= */
+
+/*
+   Le navigateur ne donne pas d'accès direct
+   aux pochettes intégrées dans un MP3.
+
+   On lit donc nous-mêmes le début du fichier
+   pour trouver et décoder l'image contenue
+   dans les tags ID3v2 (trame APIC pour les
+   versions 2.3/2.4, PIC pour la 2.2).
+
+   Si le fichier n'a pas de tag ID3 ou pas
+   de pochette, on renvoie simplement null
+   (comportement identique à avant).
+*/
+
+async function extractAudioCover(file) {
+
+    try {
+
+        const headerBuffer =
+            await file.slice(0, 10).arrayBuffer();
+
+        const header =
+            new Uint8Array(headerBuffer);
+
+        const isId3 =
+            header[0] === 0x49 &&
+            header[1] === 0x44 &&
+            header[2] === 0x33;
+
+        if (!isId3) {
+            return null;
+        }
+
+
+        const majorVersion =
+            header[3];
+
+        const tagSize =
+            (header[6] & 0x7f) * 0x200000 +
+            (header[7] & 0x7f) * 0x4000 +
+            (header[8] & 0x7f) * 0x80 +
+            (header[9] & 0x7f);
+
+        const totalSize =
+            Math.min(
+                10 + tagSize,
+                file.size
+            );
+
+        const buffer =
+            await file.slice(0, totalSize).arrayBuffer();
+
+        const bytes =
+            new Uint8Array(buffer);
+
+
+        return majorVersion === 2
+            ? readId3v22Cover(bytes, totalSize)
+            : readId3v23Cover(bytes, totalSize, majorVersion);
+
+    } catch (error) {
+
+        return null;
+
+    }
+
+}
+
+
+function readId3v22Cover(bytes, end) {
+
+    let offset = 10;
+
+    while (offset + 6 < end) {
+
+        const frameId =
+            bytesToLatin1(bytes, offset, 3);
+
+        if (frameId === "\0\0\0") {
+            break;
+        }
+
+        const frameSize =
+            (bytes[offset + 3] << 16) |
+            (bytes[offset + 4] << 8) |
+            bytes[offset + 5];
+
+        const frameStart =
+            offset + 6;
+
+        if (frameId === "PIC" && frameSize > 0) {
+
+            let p = frameStart;
+
+            const textEncoding =
+                bytes[p];
+
+            p += 1;
+
+            const imageFormat =
+                bytesToLatin1(bytes, p, 3);
+
+            p += 3;
+
+            p += 1; // type d'image, non utilisé
+
+            p = skipTerminatedString(
+                bytes,
+                p,
+                textEncoding
+            );
+
+            const imageData =
+                bytes.slice(
+                    p,
+                    frameStart + frameSize
+                );
+
+            const mime =
+                imageFormat.toUpperCase() === "PNG"
+                    ? "image/png"
+                    : "image/jpeg";
+
+            return bytesToDataUrl(
+                imageData,
+                mime
+            );
+
+        }
+
+        offset =
+            frameStart + frameSize;
+
+    }
+
+    return null;
+
+}
+
+
+function readId3v23Cover(bytes, end, majorVersion) {
+
+    let offset = 10;
+
+    while (offset + 10 < end) {
+
+        const frameId =
+            bytesToLatin1(bytes, offset, 4);
+
+        if (frameId === "\0\0\0\0") {
+            break;
+        }
+
+        let frameSize;
+
+        if (majorVersion >= 4) {
+
+            frameSize =
+                (bytes[offset + 4] & 0x7f) * 0x200000 +
+                (bytes[offset + 5] & 0x7f) * 0x4000 +
+                (bytes[offset + 6] & 0x7f) * 0x80 +
+                (bytes[offset + 7] & 0x7f);
+
+        } else {
+
+            frameSize =
+                ((bytes[offset + 4] << 24) |
+                (bytes[offset + 5] << 16) |
+                (bytes[offset + 6] << 8) |
+                bytes[offset + 7]) >>> 0;
+
+        }
+
+        const frameStart =
+            offset + 10;
+
+        if (frameId === "APIC" && frameSize > 0) {
+
+            let p = frameStart;
+
+            const textEncoding =
+                bytes[p];
+
+            p += 1;
+
+            let mime = "";
+
+            while (bytes[p] !== 0 && p < end) {
+
+                mime +=
+                    String.fromCharCode(bytes[p]);
+
+                p += 1;
+
+            }
+
+            p += 1; // octet nul de fin du MIME
+
+            p += 1; // type d'image, non utilisé
+
+            p = skipTerminatedString(
+                bytes,
+                p,
+                textEncoding
+            );
+
+            const imageData =
+                bytes.slice(
+                    p,
+                    frameStart + frameSize
+                );
+
+            return bytesToDataUrl(
+                imageData,
+                mime || "image/jpeg"
+            );
+
+        }
+
+        offset =
+            frameStart + frameSize;
+
+    }
+
+    return null;
+
+}
+
+
+function skipTerminatedString(bytes, start, encoding) {
+
+    let p = start;
+
+    /*
+       Encodage 1 ou 2 = UTF-16 : le texte se
+       termine par deux octets nuls.
+       Sinon (Latin1/UTF-8) : un seul octet nul.
+    */
+
+    if (encoding === 1 || encoding === 2) {
+
+        while (
+            !(bytes[p] === 0 && bytes[p + 1] === 0) &&
+            p < bytes.length - 1
+        ) {
+            p += 2;
+        }
+
+        return p + 2;
+
+    }
+
+    while (bytes[p] !== 0 && p < bytes.length) {
+        p += 1;
+    }
+
+    return p + 1;
+
+}
+
+
+function bytesToLatin1(bytes, start, length) {
+
+    let text = "";
+
+    for (let i = 0; i < length; i++) {
+        text += String.fromCharCode(bytes[start + i]);
+    }
+
+    return text;
+
+}
+
+
+function bytesToDataUrl(bytes, mime) {
+
+    let binary = "";
+
+    const chunkSize = 0x8000;
+
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+
+        const chunk =
+            bytes.subarray(i, i + chunkSize);
+
+        binary +=
+            String.fromCharCode.apply(null, chunk);
+
+    }
+
+    return (
+        "data:" +
+        mime +
+        ";base64," +
+        btoa(binary)
+    );
+
+}
 
 function renderMediaList() {
 
