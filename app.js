@@ -263,17 +263,163 @@ const SETTINGS_KEY =
     "jtn_player_settings";
 
 
+/*
+   Les Blob URL (créées avec URL.createObjectURL)
+   ne survivent pas à la fermeture de l'appli.
+
+   Pour que la musique/vidéo soit encore là au
+   retour, on garde une copie du fichier lui-même
+   dans IndexedDB (le stockage "fichiers" du
+   navigateur), pas juste son nom.
+*/
+
+const MEDIA_DB_NAME =
+    "jtn_player_files";
+
+const MEDIA_DB_STORE =
+    "files";
+
+let mediaDbPromise = null;
+
+function openMediaDB() {
+
+    if (mediaDbPromise) {
+        return mediaDbPromise;
+    }
+
+    mediaDbPromise = new Promise((resolve, reject) => {
+
+        const request =
+            indexedDB.open(MEDIA_DB_NAME, 1);
+
+        request.onupgradeneeded = () => {
+
+            request.result.createObjectStore(
+                MEDIA_DB_STORE
+            );
+
+        };
+
+        request.onsuccess = () =>
+            resolve(request.result);
+
+        request.onerror = () =>
+            reject(request.error);
+
+    });
+
+    return mediaDbPromise;
+
+}
+
+async function idbSaveFile(id, file) {
+
+    try {
+
+        const db =
+            await openMediaDB();
+
+        await new Promise((resolve, reject) => {
+
+            const tx =
+                db.transaction(MEDIA_DB_STORE, "readwrite");
+
+            tx.objectStore(MEDIA_DB_STORE).put(file, id);
+
+            tx.oncomplete = resolve;
+            tx.onerror = () => reject(tx.error);
+
+        });
+
+    } catch (error) {
+
+        console.warn(
+            "Sauvegarde du fichier impossible",
+            error
+        );
+
+    }
+
+}
+
+async function idbGetFile(id) {
+
+    try {
+
+        const db =
+            await openMediaDB();
+
+        return await new Promise((resolve, reject) => {
+
+            const tx =
+                db.transaction(MEDIA_DB_STORE, "readonly");
+
+            const req =
+                tx.objectStore(MEDIA_DB_STORE).get(id);
+
+            req.onsuccess = () =>
+                resolve(req.result || null);
+
+            req.onerror = () =>
+                reject(req.error);
+
+        });
+
+    } catch (error) {
+
+        console.warn(
+            "Lecture du fichier impossible",
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+async function idbDeleteFile(id) {
+
+    try {
+
+        const db =
+            await openMediaDB();
+
+        await new Promise((resolve, reject) => {
+
+            const tx =
+                db.transaction(MEDIA_DB_STORE, "readwrite");
+
+            tx.objectStore(MEDIA_DB_STORE).delete(id);
+
+            tx.oncomplete = resolve;
+            tx.onerror = () => reject(tx.error);
+
+        });
+
+    } catch (error) {
+
+        console.warn(
+            "Suppression du fichier impossible",
+            error
+        );
+
+    }
+
+}
+
+
 /* =========================================================
    INITIALISATION
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
     audioPlayer.volume = 1;
 
     loadSettings();
 
-    loadSavedMedia();
+    await loadSavedMedia();
 
     setupEvents();
 
@@ -1248,6 +1394,11 @@ async function handleFiles(event) {
 
 
         mediaItems.unshift(item);
+
+        await idbSaveFile(
+            item.id,
+            file
+        );
 
     }
 
@@ -3049,6 +3200,10 @@ itemMenuDelete.addEventListener(
 
         }
 
+        idbDeleteFile(item.id);
+
+        saveMedia();
+
 
         if (wasPlayingThis) {
 
@@ -3788,16 +3943,13 @@ function saveMedia() {
    CHARGEMENT INFORMATIONS SAUVEGARDÉES
    ========================================================= */
 
-function loadSavedMedia() {
+async function loadSavedMedia() {
 
     /*
-       Les fichiers locaux ne peuvent pas
-       être automatiquement recréés après
-       fermeture de la page avec une simple
-       Blob URL.
-
-       On recharge donc les métadonnées
-       disponibles.
+       On récupère la liste des morceaux/vidéos
+       sauvegardés, puis on va rechercher le
+       fichier réel de chacun dans IndexedDB
+       pour recréer un lien de lecture valide.
     */
 
     try {
@@ -3809,26 +3961,78 @@ function loadSavedMedia() {
                 ) || "[]"
             );
 
-
-        /*
-           On ne remet pas les anciens fichiers
-           dans la liste comme s'ils étaient
-           encore lisibles.
-
-           Les vrais fichiers doivent être
-           rescannés/sélectionnés.
-        */
-
         if (
-            Array.isArray(saved) &&
-            saved.length
+            !Array.isArray(saved) ||
+            !saved.length
         ) {
+            return;
+        }
+
+
+        const restored = [];
+
+        for (const meta of saved) {
+
+            const file =
+                await idbGetFile(meta.id);
 
             /*
-               Aucun faux fichier n'est créé.
-               Cela évite d'afficher une musique
-               qui ne peut plus être lue.
+               Fichier introuvable (ancienne
+               sauvegarde d'avant cette mise à
+               jour, ou supprimé) : on l'ignore
+               plutôt que d'afficher une entrée
+               illisible.
             */
+
+            if (!file) {
+                continue;
+            }
+
+            const url =
+                URL.createObjectURL(file);
+
+            objectUrls.push(url);
+
+            restored.push({
+                ...meta,
+                url,
+                file
+            });
+
+        }
+
+
+        if (restored.length) {
+
+            mediaItems.push(
+                ...restored
+            );
+
+            filteredItems =
+                [...mediaItems];
+
+            renderMediaList();
+
+            updateEmptyPage();
+
+
+            /*
+               Certaines entrées n'ont pas pu
+               être restaurées : on nettoie la
+               sauvegarde pour rester cohérent.
+            */
+
+            if (restored.length !== saved.length) {
+
+                saveMedia();
+
+            }
+
+        } else {
+
+            localStorage.removeItem(
+                MEDIA_STORAGE_KEY
+            );
 
         }
 
