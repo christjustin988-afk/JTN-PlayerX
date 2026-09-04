@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080808">
+    <title>Paramètres — JTN PLAYER</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <button class="back-btn" id="backBtn" type="button">‹</button>
+    <h1>Paramètres</h1>
+</header>
+
+<main class="settings">
+
+    <section class="card">
+
+        <button class="setting-row" data-page="playtime">
+            <span class="icon">▷</span>
+            <span class="text">
+                <strong>Temps de lecture</strong>
+            </span>
+            <span class="value" id="playtimeValue">0h 00m</span>
+            <span class="arrow">›</span>
+        </button>
+
+        <div class="line"></div>
+
+        <button class="setting-row" data-page="backup">
+            <span class="icon">☁</span>
+            <span class="text">
+                <strong>Sauvegarder &amp; restaurer</strong>
+                <small>Google Drive</small>
+            </span>
+            <span class="arrow">›</span>
+        </button>
+
+    </section>
+
+
+    <section class="card">
+
+        <button class="setting-row" data-page="theme">
+            <span class="icon">◐</span>
+            <span class="text">
+                <strong>Thème</strong>
+            </span>
+            <span class="value" id="themeValue">
+                Classique / Moyen
+            </span>
+            <span class="arrow">›</span>
+        </button>
+
+        <div class="line"></div>
+
+        <button class="setting-row" data-page="sleep">
+            <span class="icon">◷</span>
+            <span class="text">
+                <strong>Minuterie de sommeil</strong>
+            </span>
+            <span class="value" id="sleepValue">
+                Désactiver
+            </span>
+            <span class="arrow">›</span>
+        </button>
+
+        <div class="line"></div>
+
+        <button class="setting-row" data-page="ads">
+            <span class="icon">Ⓐ</span>
+            <span class="text">
+                <strong>Supprimer les pubs</strong>
+            </span>
+            <span class="value" id="adsValue">
+                50% de REMISE
+            </span>
+            <span class="arrow">›</span>
+        </button>
+
+    </section>
+
+
+    <section class="card">
+
+        <button class="setting-row" data-page="hidden">
+            <span class="icon">◉</span>
+            <span class="text">
+                <strong>Fichiers masqués</strong>
+            </span>
+            <span class="value">57 fichiers</span>
+            <span class="arrow">›</span>
+        </button>
+
+        <div class="line"></div>
+
+        <button class="setting-row" data-page="deleted">
+            <span class="icon">▢</span>
+            <span class="text">
+                <strong>Récemment supprimé</strong>
+            </span>
+            <span class="value">1 fichier</span>
+            <span class="arrow">›</span>
+        </button>
+
+        <div class="line"></div>
+
+        <button class="setting-row" data-page="playback">
+            <span class="icon">♬</span>
+            <span class="text">
+                <strong>Paramètres de lecture</strong>
+            </span>
+            <span class="arrow">›</span>
+        </button>
+
+        <div class="line"></div>
+
+        <button class="setting-row" data-page="notifications">
+            <span class="icon">♧</span>
+            <span class="text">
+                <strong>Paramètres de notifications</strong>
+            </span>
+            <span class="arrow">›</span>
+        </button>
+
+        <div class="line"></div>
+
+        <button class="setting-row" data-page="language">
+            <span class="icon">文</span>
+            <span class="text">
+                <strong>Langue</strong>
+            </span>
+            <span class="value" id="languageValue">
+                Français
+            </span>
+            <span class="arrow">›</span>
+        </button>
+
+    </section>
+
+
+    <section class="card">
+
+        <button class="setting-row" data-page="feedback">
+            <span class="icon">✉</span>
+            <span class="text">
+                <strong>Retour</strong>
+            </span>
+            <span class="arrow">›</span>
+        </button>
+
+        <div class="line"></div>
+
+        <button class="setting-row" data-page="about">
+            <span class="icon">ⓘ</span>
+            <span class="text">
+                <strong>À propos</strong>
+            </span>
+            <span class="value">2026.7.10</span>
+            <span class="arrow">›</span>
+        </button>
+
+    </section>
+
+</main>
+
+
+<div class="subpage" id="subpage">
+
+    <header class="sub-header">
+        <button class="back-btn" id="subBackBtn" type="button">‹</button>
+        <h1 id="subTitle">Paramètres</h1>
+    </header>
+
+    <main class="sub-content" id="subContent"></main>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+<script src="settings.js"></script>
+
+</body>
+</html>
