@@ -1,0 +1,2046 @@
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --accent: #00ff3c;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: color-mix(in srgb, var(--accent) 13%, #060606);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: background .35s ease, color .35s ease;
+}
+
+body {
+    padding-bottom: 125px;
+    overflow-x: hidden;
+}
+
+body.player-open {
+    overflow: hidden;
+}
+
+:root {
+    --green: var(--accent, #00ff3c);
+    --green-dark: #071107;
+    --card: #151515;
+    --border: #292929;
+    --gray: #999;
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 22px 15px 30px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: var(--green);
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.header-btn {
+    width: 45px;
+    height: 45px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.header-btn:active {
+    background: #1a1a1a;
+    transform: scale(.86);
+}
+
+
+/* =========================================================
+   RECHERCHE
+   ========================================================= */
+
+.search-container {
+    display: none;
+    margin-bottom: 18px;
+}
+
+.search-container.show {
+    display: block;
+}
+
+.search-container input {
+    width: 100%;
+    height: 50px;
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 27px;
+    padding: 0 18px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-container input:focus {
+    border-color: var(--green);
+}
+
+
+/* =========================================================
+   ONGLETS
+   ========================================================= */
+
+.tabs {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-bottom: 25px;
+    padding-bottom: 3px;
+}
+
+.tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tab {
+    height: 53px;
+    padding: 0 22px;
+    border-radius: 28px;
+    border: 1px solid #252525;
+    background: #151515;
+    color: #ddd;
+    font-size: 17px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.tab:active {
+    transform: scale(.95);
+}
+
+.tab.active {
+    background: var(--green);
+    color: #000;
+    border-color: var(--green);
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   PAGE VIDE
+   ========================================================= */
+
+.empty-page {
+    text-align: center;
+    padding-top: 25px;
+}
+
+.headphone {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.headphone svg {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+    filter:
+        drop-shadow(0 0 7px var(--green))
+        drop-shadow(0 0 18px rgba(0,255,60,.25));
+}
+
+.glow {
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background: rgba(0,255,60,.08);
+    filter: blur(50px);
+}
+
+.empty-page h1 {
+    font-size: 27px;
+    margin: 8px 0;
+}
+
+.empty-page p {
+    color: #aaa;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.scan-button {
+    height: 59px;
+    padding: 0 28px;
+    border-radius: 30px;
+    border: 2px solid var(--green);
+    background: transparent;
+    color: var(--green);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.scan-button:active {
+    background: var(--green);
+    color: #000;
+    transform: scale(.96);
+}
+
+
+/* =========================================================
+   LISTE DES MÉDIAS
+   ========================================================= */
+
+.media-list {
+    display: none;
+}
+
+.media-list.show {
+    display: block;
+}
+
+.media-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 76px;
+    margin-bottom: 9px;
+    padding: 10px;
+    background: #121212;
+    border: 1px solid #252525;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.media-item:active {
+    background: #202020;
+    transform: scale(.985);
+}
+
+.media-cover {
+    width: 54px;
+    height: 54px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: #080808;
+    border-radius: 13px;
+    color: var(--green);
+    font-size: 26px;
+    overflow: hidden;
+}
+
+.cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    display: block;
+}
+
+.media-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.media-name {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.media-type {
+    color: #888;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.favorite {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+    color: #777;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.favorite.active {
+    color: var(--green);
+}
+
+
+/* =========================================================
+   MINI PLAYER
+   ========================================================= */
+
+.mini-player {
+    position: fixed;
+    z-index: 50;
+    left: 9px;
+    right: 9px;
+    bottom: 8px;
+    padding: 11px 13px 9px;
+    border-radius: 25px;
+    background: #151c17;
+    border: 1px solid #29372c;
+    box-shadow: 0 0 20px rgba(0,0,0,.8);
+    cursor: pointer;
+}
+
+.mini-info {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.album-icon {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: #070707;
+    color: var(--green);
+    font-size: 28px;
+    overflow: hidden;
+}
+
+.track-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.track-title {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-artist {
+    color: #999;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2px;
+    margin-top: -49px;
+}
+
+.player-controls button {
+    width: 38px;
+    height: 45px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.player-controls .main-play {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 3px solid var(--green);
+    color: var(--green);
+}
+
+.progress-container {
+    width: 100%;
+    height: 5px;
+    margin-top: 8px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--green);
+}
+
+.time-row {
+    display: flex;
+    justify-content: space-between;
+    color: #777;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+
+/* =========================================================
+   LECTEUR COMPLET — PLEIN ÉCRAN
+   ========================================================= */
+
+.full-player {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+
+    z-index: 1000;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #102117 0%,
+            #071008 35%,
+            #030403 72%,
+            #000 100%
+        );
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding:
+        max(18px, env(safe-area-inset-top))
+        20px
+        max(40px, env(safe-area-inset-bottom));
+
+    transform: translateY(100%);
+    visibility: hidden;
+    opacity: 0;
+
+    transition:
+        transform .35s ease,
+        opacity .25s ease,
+        visibility .35s;
+
+    overscroll-behavior: contain;
+}
+
+.full-player.open {
+    transform: translateY(0);
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/* =========================================================
+   HAUT DU LECTEUR
+   ========================================================= */
+
+.full-player-top {
+    width: 100%;
+
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.full-player-top button {
+    width: 44px;
+    height: 5px;
+
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+
+    background: #3a3a3a;
+
+    cursor: pointer;
+}
+
+.full-player-top button:active {
+    background: #555;
+    transform: scaleX(1.1);
+}
+
+
+/* =========================================================
+   GRANDE POCHETTE
+   ========================================================= */
+
+.full-cover {
+    width: min(88vw, 420px);
+    aspect-ratio: 1;
+
+    margin:
+        clamp(15px, 4vh, 35px)
+        auto
+        clamp(22px, 4vh, 35px);
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1b2b20,
+            #0b130d 45%,
+            #030503
+        );
+
+    border: 1px solid #26352a;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--green);
+
+    font-size: clamp(80px, 18vw, 115px);
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.7),
+        0 0 50px rgba(0,255,60,.08);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   TITRE
+   ========================================================= */
+
+.full-title-row {
+    width: 100%;
+    max-width: 600px;
+
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.full-title-row > div {
+    min-width: 0;
+    flex: 1;
+}
+
+.full-title-row h1 {
+    margin: 0;
+
+    font-size: clamp(20px, 5.2vw, 27px);
+    font-weight: 800;
+    line-height: 1.25;
+
+    color: var(--accent);
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+.full-title-row p {
+    margin: 8px 0 0;
+
+    color: #888;
+
+    font-size: 15px;
+}
+
+.full-title-actions {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#fullFavorite,
+#fullMore {
+    width: 44px;
+    height: 44px;
+
+    border: 0;
+    background: transparent;
+
+    color: #999;
+
+    font-size: 26px;
+
+    cursor: pointer;
+}
+
+#fullFavorite.active {
+    color: var(--accent);
+}
+
+
+/* =========================================================
+   PROGRESSION
+   ========================================================= */
+
+.full-progress-area {
+    width: 100%;
+    max-width: 600px;
+
+    margin: 30px auto 0;
+}
+
+#fullProgress {
+    width: 100%;
+    height: 5px;
+
+    margin: 0;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background: #353535;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+#fullProgress::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 15px;
+    height: 15px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    box-shadow: 0 0 8px rgba(0,255,60,.5);
+}
+
+#fullProgress::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: var(--green);
+}
+
+.full-time {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 8px;
+
+    color: #777;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   COMMANDES PRINCIPALES
+   ========================================================= */
+
+.full-main-controls {
+    width: 100%;
+    max-width: 600px;
+
+    margin: 30px auto 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 46px;
+}
+
+.full-main-controls button {
+    width: 60px;
+    height: 60px;
+
+    border: 0;
+    background: transparent;
+
+    color: var(--accent);
+
+    font-size: 34px;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+.full-main-controls button:active {
+    transform: scale(.88);
+}
+
+.full-main-controls .full-play {
+    width: 86px;
+    height: 86px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+
+    color: #000;
+
+    font-size: 34px;
+
+    box-shadow:
+        0 0 26px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.full-main-controls .full-play:active {
+    transform: scale(.92);
+}
+
+
+/* =========================================================
+   COMMANDES SUPPLÉMENTAIRES
+   ========================================================= */
+
+.extra-controls {
+    width: 100%;
+    max-width: 600px;
+
+    margin: 30px auto 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 4px 4px;
+}
+
+.extra-controls button {
+    border: 0;
+    background: transparent;
+
+    color: #999;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.extra-controls button:active {
+    transform: scale(.9);
+}
+
+.extra-controls .lyrics-pill {
+    flex-shrink: 0;
+
+    padding: 12px 26px;
+
+    border-radius: 30px;
+
+    background: #1c1c1c;
+    color: #ddd;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.extra-controls button.active {
+    color: var(--accent);
+}
+
+
+/* =========================================================
+   FILE D'ATTENTE
+   ========================================================= */
+
+.queue {
+    width: 100%;
+    max-width: 600px;
+
+    margin: 30px auto 0;
+}
+
+.queue h2 {
+    margin: 0 0 15px;
+
+    font-size: 18px;
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px;
+
+    margin-bottom: 8px;
+
+    background: #0e110f;
+
+    border: 1px solid #202620;
+
+    border-radius: 13px;
+}
+
+.queue-cover {
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: #050705;
+
+    color: var(--green);
+
+    font-size: 20px;
+
+    overflow: hidden;
+}
+
+.queue-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.queue-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.queue-type {
+    margin-top: 4px;
+
+    color: #777;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   LECTEUR VIDÉO — PLEIN ÉCRAN
+   ========================================================= */
+
+.video-screen {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+
+    z-index: 1100;
+
+    background: #000;
+    color: #fff;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    transform: translateY(100%);
+    visibility: hidden;
+    opacity: 0;
+
+    transition:
+        transform .35s ease,
+        opacity .25s ease,
+        visibility .35s;
+}
+
+.video-screen.open {
+    transform: translateY(0);
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/* BARRE DU HAUT */
+
+.video-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: max(16px, env(safe-area-inset-top)) 16px 14px;
+
+    border-bottom: 1px solid #1c1c1c;
+}
+
+.video-top #videoClose {
+    width: 36px;
+    height: 36px;
+
+    border: 0;
+    background: transparent;
+    color: #fff;
+
+    font-size: 24px;
+
+    cursor: pointer;
+}
+
+.video-logo {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.video-logo span {
+    color: var(--green);
+}
+
+.video-top-actions {
+    display: flex;
+    gap: 18px;
+}
+
+.video-top-actions button {
+    border: 0;
+    background: transparent;
+    color: var(--green);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.speed-icon-btn {
+    position: relative;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    background: transparent;
+
+    color: var(--green);
+
+    cursor: pointer;
+}
+
+.speed-icon-ring {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+.speed-icon-label {
+    position: relative;
+
+    z-index: 1;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+
+/* ZONE VIDÉO */
+
+.video-stage {
+    position: relative;
+
+    width: 100%;
+    aspect-ratio: 16 / 9;
+
+    min-height: 220px;
+
+    background: #000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.video-stage video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    background: #000;
+}
+
+
+/* LOGO JTN — MODE AUDIO SEUL */
+
+.video-audio-brand {
+    position: absolute;
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    pointer-events: none;
+
+    background: #000;
+}
+
+.video-screen.audio-only .video-audio-brand {
+    display: flex;
+}
+
+.video-screen.audio-only .video-stage video {
+    opacity: 0;
+}
+
+.video-audio-brand .brand-jtn {
+    font-size: 68px;
+    font-weight: 900;
+    letter-spacing: 2px;
+
+    color: var(--green);
+
+    text-shadow:
+        0 0 14px var(--green),
+        0 0 34px var(--green);
+}
+
+.video-audio-brand .brand-player {
+    margin-top: -8px;
+
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 10px;
+
+    color: #6b6b6b;
+}
+
+
+/* CONTRÔLES CENTRAUX */
+
+.video-side,
+.video-center-play {
+    position: absolute;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 3;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: rgba(10, 10, 10, .55);
+    color: #fff;
+
+    cursor: pointer;
+}
+
+.video-side {
+    width: 54px;
+    height: 54px;
+    font-size: 22px;
+}
+
+.video-prev { left: 18px; }
+.video-next { right: 18px; }
+
+.video-center-play {
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 78px;
+    height: 78px;
+
+    font-size: 28px;
+}
+
+
+/* BARRE DE PROGRESSION */
+
+.video-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 14px 16px 6px;
+
+    font-size: 13px;
+    color: #aaa;
+}
+
+.video-progress input[type="range"] {
+    flex: 1;
+
+    accent-color: var(--green);
+}
+
+
+/* INFOS */
+
+.video-info {
+    padding: 6px 16px 14px;
+}
+
+.video-title {
+    font-size: 17px;
+    font-weight: 700;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.video-artist {
+    margin-top: 3px;
+
+    font-size: 14px;
+    color: var(--green);
+}
+
+
+/* ACTIONS */
+
+.video-actions {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 8px 16px 20px;
+
+    border-bottom: 1px solid #1c1c1c;
+}
+
+.video-actions button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    border: 0;
+    background: transparent;
+    color: var(--green);
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.video-actions button small {
+    font-size: 12px;
+    font-weight: 600;
+    color: #ccc;
+}
+
+.video-screen.locked .video-actions button#videoLock {
+    color: #ff5050;
+}
+
+
+/* À SUIVRE */
+
+.video-up-next {
+    flex: 1;
+
+    padding: 16px 16px 30px;
+}
+
+.video-up-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 14px;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.video-up-header #videoCount {
+    color: var(--green);
+    font-weight: 700;
+}
+
+.queue-video-brand {
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--green);
+    text-align: center;
+    line-height: 1.3;
+}
+
+.queue-video-brand b {
+    display: block;
+    font-size: 12px;
+}
+
+.queue-duration {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+
+    padding: 1px 5px;
+
+    border-radius: 4px;
+
+    background: rgba(0,0,0,.7);
+
+    font-size: 10px;
+    color: #fff;
+}
+
+.video-up-next .queue-cover {
+    position: relative;
+}
+
+.video-up-next .queue-item.active {
+    background: rgba(0,255,60,.08);
+    border-color: var(--green);
+}
+
+
+/* VERROUILLAGE */
+
+.video-screen.locked .video-top,
+.video-screen.locked .video-side,
+.video-screen.locked .video-progress,
+.video-screen.locked .video-info,
+.video-screen.locked .video-up-next,
+.video-screen.locked .video-actions button:not(#videoLock) {
+    pointer-events: none;
+    opacity: .25;
+}
+
+.video-screen.locked .video-center-play {
+    pointer-events: none;
+    opacity: .25;
+}
+
+/* Le bouton de déverrouillage reste toujours actif et visible */
+.video-screen.locked #videoLockTop {
+    pointer-events: auto;
+    opacity: 1;
+    color: #ff5050;
+}
+
+
+/* ROTATION (simule le mode paysage) */
+
+.video-screen.rotated .video-stage {
+    aspect-ratio: auto;
+    height: 100vw;
+
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+
+/* =========================================================
+   PLEIN ÉCRAN RÉEL — LA VIDÉO REMPLIT TOUT LE TÉLÉPHONE
+   ========================================================= */
+
+.video-screen.fullscreen-mode {
+    overflow: hidden;
+}
+
+.video-screen.fullscreen-mode .video-stage {
+    position: fixed;
+    inset: 0;
+
+    z-index: 10;
+
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+
+    aspect-ratio: unset;
+
+    min-height: 0;
+}
+
+
+/* En plein écran, la file d'attente et les
+   infos passent derrière la vidéo — inutiles
+   tant qu'on ne quitte pas ce mode. */
+
+.video-screen.fullscreen-mode .video-progress,
+.video-screen.fullscreen-mode .video-info,
+.video-screen.fullscreen-mode .video-up-next {
+    display: none;
+}
+
+
+/* La barre du haut et les actions du bas
+   deviennent des bandeaux flottants
+   au-dessus de la vidéo plein écran. */
+
+.video-screen.fullscreen-mode .video-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 20;
+
+    padding-top: max(14px, env(safe-area-inset-top));
+
+    background: linear-gradient(
+        rgba(0,0,0,.65),
+        transparent
+    );
+
+    border-bottom: 0;
+}
+
+.video-screen.fullscreen-mode .video-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 20;
+
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+
+    background: linear-gradient(
+        transparent,
+        rgba(0,0,0,.65)
+    );
+
+    border-bottom: 0;
+}
+
+
+/* Les boutons ne s'affichent que sur un tap
+   (classe "show-controls"), puis se masquent
+   automatiquement après quelques secondes. */
+
+.video-screen.fullscreen-mode .video-top,
+.video-screen.fullscreen-mode .video-actions,
+.video-screen.fullscreen-mode .video-side,
+.video-screen.fullscreen-mode .video-center-play {
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity .25s ease;
+}
+
+.video-screen.fullscreen-mode.show-controls .video-top,
+.video-screen.fullscreen-mode.show-controls .video-actions,
+.video-screen.fullscreen-mode.show-controls .video-side,
+.video-screen.fullscreen-mode.show-controls .video-center-play {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.video-screen.fullscreen-mode .video-stage {
+    cursor: pointer;
+}
+
+
+/* Rotation combinée au plein écran : on fait
+   pivoter tout l'écran pour simuler le mode
+   paysage, même si le téléphone reste en
+   position verticale. */
+
+.video-screen.fullscreen-mode.rotated {
+    width: 100vh;
+    height: 100vw;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.video-screen.fullscreen-mode.rotated .video-stage {
+    width: 100vh;
+    height: 100vw;
+
+    transform: none;
+}
+
+
+/* FILE D'ATTENTE — SURBRILLANCE MOBILE */
+
+.video-screen.show-queue .video-up-next {
+    outline: 2px solid var(--green);
+    outline-offset: -2px;
+    border-radius: 12px;
+}
+
+
+/* =========================================================
+   PARAMÈTRES
+   ========================================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2000;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0,0,0,.75);
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 22px;
+
+    border-radius: 24px;
+
+    background: #111;
+
+    border: 1px solid #292929;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.8);
+}
+
+.modal-box h2 {
+    margin: 0 0 18px;
+
+    font-size: 22px;
+}
+
+.setting-item {
+    width: 100%;
+
+    min-height: 55px;
+
+    margin-bottom: 8px;
+
+    padding: 0 16px;
+
+    border: 1px solid #252525;
+
+    border-radius: 14px;
+
+    background: #181818;
+
+    color: #fff;
+
+    text-align: left;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.setting-item:active {
+    background: #222;
+}
+
+.close-modal {
+    width: 100%;
+
+    height: 52px;
+
+    margin-top: 10px;
+
+    border: 1px solid var(--green);
+
+    border-radius: 26px;
+
+    background: transparent;
+
+    color: var(--green);
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MENU TRI
+   ========================================================= */
+
+.sort-menu {
+    position: fixed;
+
+    z-index: 300;
+
+    top: 75px;
+    right: 15px;
+
+    width: 180px;
+
+    display: none;
+
+    padding: 7px;
+
+    border-radius: 15px;
+
+    background: #161616;
+
+    border: 1px solid #2b2b2b;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,.7);
+}
+
+.sort-menu.open {
+    display: block;
+}
+
+.sort-menu button {
+    width: 100%;
+
+    height: 45px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: #fff;
+
+    text-align: left;
+
+    padding: 0 13px;
+
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+.sort-menu button:active {
+    background: #222;
+}
+
+
+/* MENU "PLUS" — MUSIQUE / VIDÉO */
+
+.item-menu-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1500;
+
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: center;
+
+    background: rgba(0,0,0,0);
+
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        background .25s ease,
+        visibility .25s;
+}
+
+.item-menu-overlay.open {
+    visibility: visible;
+    pointer-events: auto;
+
+    background: rgba(0,0,0,.55);
+}
+
+.item-menu {
+    width: 100%;
+    max-width: 500px;
+
+    padding: 10px 14px
+        max(14px, env(safe-area-inset-bottom));
+
+    border-radius: 22px 22px 0 0;
+
+    background: #161616;
+
+    box-shadow: 0 -10px 40px rgba(0,0,0,.6);
+
+    transform: translateY(100%);
+
+    transition: transform .32s ease;
+}
+
+.item-menu-overlay.open .item-menu {
+    transform: translateY(0);
+}
+
+.item-menu-title {
+    padding: 14px 10px 10px;
+
+    color: #888;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    border-bottom: 1px solid #262626;
+
+    margin-bottom: 6px;
+}
+
+.item-menu button {
+    width: 100%;
+    height: 52px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background: transparent;
+    color: #fff;
+
+    text-align: left;
+    padding: 0 14px;
+
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+.item-menu button:active {
+    background: #232323;
+}
+
+.item-menu #itemMenuDelete {
+    color: #ff5c5c;
+}
+
+.item-menu #itemMenuCancel {
+    margin-top: 6px;
+
+    text-align: center;
+    font-weight: 700;
+    color: #999;
+
+    border-top: 1px solid #262626;
+    border-radius: 0;
+}
+
+.item-menu #itemMenuFavorite.active {
+    color: var(--accent);
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast {
+    position: fixed;
+
+    z-index: 3000;
+
+    left: 50%;
+
+    bottom: 145px;
+
+    transform:
+        translateX(-50%)
+        translateY(20px);
+
+    min-width: 180px;
+
+    max-width: calc(100vw - 40px);
+
+    padding: 13px 18px;
+
+    border-radius: 25px;
+
+    background: #1c1c1c;
+
+    border: 1px solid #333;
+
+    color: #fff;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: .25s ease;
+}
+
+.toast.show {
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+
+/* =========================================================
+   RESPONSIVE MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .app {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .logo {
+        font-size: 25px;
+    }
+
+    .header-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 25px;
+    }
+
+    .tab {
+        height: 49px;
+        padding: 0 18px;
+        font-size: 15px;
+    }
+
+    .headphone {
+        width: 260px;
+        height: 260px;
+    }
+
+    .empty-page h1 {
+        font-size: 23px;
+    }
+
+    .empty-page p {
+        font-size: 16px;
+    }
+
+    .scan-button {
+        font-size: 16px;
+        height: 55px;
+    }
+
+    .mini-player {
+        left: 7px;
+        right: 7px;
+        bottom: 6px;
+    }
+
+    .full-player {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .full-cover {
+        width: min(84vw, 360px);
+        margin-top: 15px;
+    }
+
+    .full-main-controls {
+        gap: 30px;
+    }
+
+    .full-main-controls button {
+        width: 50px;
+        height: 50px;
+        font-size: 28px;
+    }
+
+    .full-main-controls .full-play {
+        width: 74px;
+        height: 74px;
+        font-size: 30px;
+    }
+
+}
+
+
+/* =========================================================
+   PETITS ÉCRANS
+   ========================================================= */
+
+@media (max-height: 700px) {
+
+    .full-cover {
+        width: min(62vw, 300px);
+        margin-top: 5px;
+        margin-bottom: 15px;
+    }
+
+    .full-progress-area {
+        margin-top: 18px;
+    }
+
+    .full-main-controls {
+        margin-top: 14px;
+    }
+
+    .extra-controls {
+        margin-top: 18px;
+        padding: 12px 0;
+    }
+
+}
+
+
+/* =========================================================
+   GRAND ÉCRAN
+   ========================================================= */
+
+@media (min-width: 800px) {
+
+    .full-cover {
+        width: 390px;
+    }
+
+    .full-player {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+}
+
+
+/* =========================================================
+   PARAMÈTRES — THÈMES DEPUIS settings.html
+   Le thème sombre original reste inchangé.
+========================================================= */
+
+body.theme-light {
+    background: color-mix(in srgb, var(--accent) 9%, #ffffff);
+    color: #111;
+}
+
+body.theme-light .header-btn,
+body.theme-light .player-controls button {
+    color: #111;
+}
+
+body.theme-light .full-player-top button {
+    background: #ccc;
+}
+
+body.theme-light .search-container input,
+body.theme-light .tab,
+body.theme-light .media-item,
+body.theme-light .modal-box,
+body.theme-light .setting-item,
+body.theme-light .sort-menu {
+    background: #fff;
+    color: #111;
+}
+
+body.theme-light .search-container input { border-color: #ddd; }
+body.theme-light .tab { border-color: #ddd; color: #333; }
+body.theme-light .media-item { border-color: #ddd; }
+body.theme-light .media-item:active { background: #e8e8e8; }
+
+body.theme-light .media-cover,
+body.theme-light .album-icon { background: #eee; }
+
+body.theme-light .media-type,
+body.theme-light .track-artist,
+body.theme-light .full-title-row p,
+body.theme-light .full-time,
+body.theme-light .time-row { color: #777; }
+
+body.theme-light .mini-player {
+    background: #fff;
+    border-color: #ddd;
+    box-shadow: 0 0 20px rgba(0,0,0,.15);
+}
+
+body.theme-light .full-player { background: #f4f4f4; }
+
+body.theme-light .full-cover {
+    background: linear-gradient(145deg, #e7e7e7, #fff 45%, #ddd);
+    border-color: #ddd;
+}
+
+body.theme-light .extra-controls button { color: #555; }
+body.theme-light .extra-controls .lyrics-pill {
+    background: #e8e8e8;
+    color: #222;
+}
+
+body.theme-light .queue-item {
+    background: #fff;
+    border-color: #ddd;
+}
+
+body.theme-light .queue-type { color: #777; }
+body.theme-light .sort-menu { border-color: #ddd; }
+body.theme-light .sort-menu button { color: #111; }
+
+body.theme-light .speed-menu {
+    background: #fff;
+    border-color: #ddd;
+}
+body.theme-light .speed-menu-title {
+    color: #777;
+    border-bottom-color: #eee;
+}
+body.theme-light .speed-menu button {
+    color: #111;
+}
+body.theme-light .speed-menu button:active {
+    background: #f0f0f0;
+}
+body.theme-light .modal { background: rgba(0,0,0,.35); }
+body.theme-light .modal-box { border-color: #ddd; }
+
+body.theme-light .item-menu {
+    background: #fff;
+}
+body.theme-light .item-menu-title {
+    color: #777;
+    border-bottom-color: #e6e6e6;
+}
+body.theme-light .item-menu button {
+    color: #111;
+}
+body.theme-light .item-menu button:active {
+    background: #f0f0f0;
+}
+body.theme-light .item-menu #itemMenuCancel {
+    color: #777;
+    border-top-color: #e6e6e6;
+}
+
+body.theme-green {
+    background: #020602;
+    color: #fff;
+}
+
+
+/* FOND D'ÉCRAN — ÉCRAN D'ACCUEIL */
+
+/*
+   Calque dédié plutôt que background-attachment:fixed
+   sur <body> : cette propriété n'est pas fiable sur
+   la plupart des navigateurs/WebView mobiles (l'image
+   se recalcule alors sur la hauteur totale de la page
+   au lieu du viewport, et semble "remonter" quand le
+   contenu grandit).
+*/
+
+.wallpaper-layer {
+    position: fixed;
+    inset: 0;
+
+    z-index: -1;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    pointer-events: none;
+}
+
+body.has-wallpaper .header,
+body.has-wallpaper .tab,
+body.has-wallpaper .media-item,
+body.has-wallpaper .mini-player,
+body.has-wallpaper .full-player,
+body.has-wallpaper .video-controls,
+body.has-wallpaper .sort-menu,
+body.has-wallpaper .modal-box,
+body.has-wallpaper .search-container {
+    background: rgba(10, 10, 10, .62);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+body.has-wallpaper.theme-light .header,
+body.has-wallpaper.theme-light .tab,
+body.has-wallpaper.theme-light .media-item,
+body.has-wallpaper.theme-light .mini-player,
+body.has-wallpaper.theme-light .full-player,
+body.has-wallpaper.theme-light .video-controls,
+body.has-wallpaper.theme-light .sort-menu,
+body.has-wallpaper.theme-light .modal-box,
+body.has-wallpaper.theme-light .search-container {
+    background: rgba(255, 255, 255, .68);
+}
+
+body.has-wallpaper .full-player {
+    background-color: rgba(10, 10, 10, .78);
+}
+
+body.has-wallpaper.theme-light .full-player {
+    background-color: rgba(255, 255, 255, .82);
+}
+
+ 
