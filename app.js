@@ -1325,7 +1325,7 @@ async function handleFiles(event) {
 
 
     showToast(
-        "Ajout des fichiers..."
+        "Analyse du dossier en cours..."
     );
 
 
